@@ -105,7 +105,7 @@ __metadata:
     prettier: "npm:^3.0.3"
     typescript: "npm:^5.2.2"
   bin:
-    mythicauthservice-dummy: ./lib/dummy-auth.js
+    mythicauthservice-dummy: ./lib/dummy-service.js
   languageName: unknown
   linkType: soft
 

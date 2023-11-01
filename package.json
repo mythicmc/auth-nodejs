@@ -3,6 +3,7 @@
   "version": "1.0.0-alpha.1",
   "description": "Node.js client for MythicAuthService.",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mythicmc/auth-nodejs.git"
@@ -19,7 +20,7 @@
     "node": ">=18"
   },
   "bin": {
-    "mythicauthservice-dummy": "./lib/dummy-auth.js"
+    "mythicauthservice-dummy": "./lib/dummy-service.js"
   },
   "scripts": {
     "test": "echo FIXME: No tests!",
