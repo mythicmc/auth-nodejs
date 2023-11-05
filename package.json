@@ -2,12 +2,6 @@
   "name": "@mythicmc/auth",
   "version": "1.0.0",
   "description": "Node.js client for MythicAuthService.",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "exports": {
-    ".": "./lib/index.js",
-    "./standalone.js": "./lib/standalone.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mythicmc/auth-nodejs.git"
@@ -23,13 +17,19 @@
   "engines": {
     "node": ">=18"
   },
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": "./lib/index.js",
+    "./standalone.js": "./lib/standalone.js"
+  },
   "bin": {
-    "mythicauthservice-dummy": "./lib/dummy-service.js"
+    "dummy-service": "./lib/dummy-service.js"
   },
   "scripts": {
     "test": "echo FIXME: No tests!",
     "lint": "eslint . && tsc --noEmit",
-    "build": "tsc",
+    "build": "tsc && node ./scripts/build.js",
     "prepublish": "yarn build"
   },
   "dependencies": {

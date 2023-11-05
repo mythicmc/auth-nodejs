@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { Redis } from 'ioredis'
 
 const url = process.argv[2] ?? 'redis://localhost:6379'
