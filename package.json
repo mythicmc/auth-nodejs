@@ -2,8 +2,12 @@
   "name": "@mythicmc/auth",
   "version": "1.0.0-alpha.1",
   "description": "Node.js client for MythicAuthService.",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": "./lib/index.js",
+    "./standalone.js": "./lib/standalone.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mythicmc/auth-nodejs.git"
