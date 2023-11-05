@@ -1,4 +1,3 @@
-// FIXME: Design API, then drop dependency on the service entirely tbh
 import mariadb from 'mariadb'
 import sqlLegacy from 'sql-template-tag'
 
@@ -14,16 +13,15 @@ export default class MythicAuth {
     this.#pool = mariadb.createPool(mysqlConfig)
   }
 
-  async checkUserPermission(username: string, permission: string): Promise<boolean> {
+  async #checkUserPermission(username: string, permission: string): Promise<boolean> {
     // TODO: Get in user's primary group and UUID
-    // TODO: Get any secondary groups (group.%) and permissions that apply
+    // Get any secondary groups (group.%) and permissions that apply
     // (split permission by . and append %, e.g. for a.b.c we must check a.*, a.b.* and a.b.c)
-    // TODO: Get any secondary group permissions, do this recursively?
+    // Get any secondary group permissions, do this recursively?
     return false
   }
 
-  // TODO: MariaDB backend only
-  async checkUserLogin(username: string, password: string): Promise<boolean> {
+  async #checkUserLogin(username: string, password: string): Promise<boolean> {
     const result = await this.#pool.query(
       ...sql`SELECT accounts.playername, accounts.password, accounts.passedtest, deltabans_bans.name
         FROM accounts 
@@ -37,8 +35,7 @@ export default class MythicAuth {
     } else return false
   }
 
-  // TODO: MariaDB backend only
-  async checkUserExists(username: string): Promise<boolean> {
+  async #checkUserExists(username: string): Promise<boolean> {
     const result = await this.#pool.query(
       ...sql`SELECT accounts.playername, accounts.passedtest, deltabans_bans.name
         FROM accounts 
@@ -49,5 +46,12 @@ export default class MythicAuth {
     return !!result.length
   }
 
-  // TODO: async checkUserPermLogin(username: string, permission: string, password?: string) {}
+  async checkUser(username: string, permission?: string, password?: string): Promise<boolean> {
+    if (password === '' || permission === '') return false // Safety check
+    if (!permission && !password) return await this.#checkUserExists(username)
+    return (
+      (!password || (await this.#checkUserLogin(username, password))) &&
+      (!permission || (await this.#checkUserPermission(username, permission)))
+    )
+  }
 }
