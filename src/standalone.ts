@@ -8,17 +8,28 @@ const sql = (strings: TemplateStringsArray, ...values: string[]): [string, unkno
 
 export default class MythicAuth {
   readonly #pool: mariadb.Pool
+  readonly #lpApiUrl: string
 
-  constructor(mysqlConfig: string | mariadb.PoolConfig) {
+  constructor(mysqlConfig: string | mariadb.PoolConfig, luckpermsApiUrl: string) {
     this.#pool = mariadb.createPool(mysqlConfig)
+    this.#lpApiUrl = luckpermsApiUrl
   }
 
   async #checkUserPermission(username: string, permission: string): Promise<boolean> {
-    // TODO: Get in user's primary group and UUID
-    // Get any secondary groups (group.%) and permissions that apply
-    // (split permission by . and append %, e.g. for a.b.c we must check a.*, a.b.* and a.b.c)
-    // Get any secondary group permissions, do this recursively?
-    return false
+    if (this.#lpApiUrl.startsWith('emulate ')) {
+      // In future:
+      // - Get user's primary group and UUID.
+      // - Get any secondary groups (group.%) and load all permissions for primary/secondary groups.
+      // - Find all matching permissions in the global scope.
+      // But this has a performance impact... I think, just stick to the REST API.
+      return false
+    }
+    const r1 = await fetch(`${this.#lpApiUrl}/user/lookup?username=${encodeURIComponent(username)}`)
+    if (!r1.ok) return false
+    const { uniqueId } = (await r1.json()) as { uniqueId: string }
+    const r2 = await fetch(`${this.#lpApiUrl}/user/${encodeURIComponent(uniqueId)}/permissionCheck\
+?permission=${encodeURIComponent(permission)}`)
+    return r2.ok && ((await r2.json()) as { result: boolean }).result
   }
 
   async #checkUserLogin(username: string, password: string): Promise<boolean> {
