@@ -1,3 +1,4 @@
+import argon2 from 'argon2'
 import mariadb from 'mariadb'
 import sql from 'sql-template-tag'
 
@@ -36,8 +37,9 @@ export default class MythicAuth {
         LIMIT 1;`,
     )
     if (result.length) {
-      // TODO: Check password validity
-      return false
+      const hash = result[0].password
+      // We don't support legacy Whirlpool hashes
+      return hash.startsWith('$argon2id') ? await argon2.verify(hash, password) : false
     } else return false
   }
 
