@@ -1,10 +1,5 @@
 import mariadb from 'mariadb'
-import sqlLegacy from 'sql-template-tag'
-
-const sql = (strings: TemplateStringsArray, ...values: string[]): [string, unknown[]] => {
-  const parsed = sqlLegacy(strings, ...values)
-  return [parsed.sql, parsed.values]
-}
+import sql from 'sql-template-tag'
 
 export default class MythicAuth {
   readonly #pool: mariadb.Pool
@@ -29,13 +24,13 @@ export default class MythicAuth {
     const { uniqueId } = (await r1.json()) as { uniqueId: string }
     const r2 = await fetch(`${this.#lpApiUrl}/user/${encodeURIComponent(uniqueId)}/permissionCheck\
 ?permission=${encodeURIComponent(permission)}`)
-    return r2.ok && ((await r2.json()) as { result: boolean }).result
+    return r2.ok && ((await r2.json()) as { result: string }).result === 'true'
   }
 
   async #checkUserLogin(username: string, password: string): Promise<boolean> {
     const result = await this.#pool.query(
-      ...sql`SELECT accounts.playername, accounts.password, accounts.passedtest, deltabans_bans.name
-        FROM accounts 
+      sql`SELECT accounts.playername, accounts.password, accounts.passedtest, deltabans_bans.name
+        FROM accounts
         LEFT JOIN deltabans_bans ON deltabans_bans.name = accounts.playername
         WHERE accounts.playername = ${username} AND accounts.passedtest = 1 AND deltabans_bans.name IS NULL
         LIMIT 1;`,
@@ -48,8 +43,8 @@ export default class MythicAuth {
 
   async #checkUserExists(username: string): Promise<boolean> {
     const result = await this.#pool.query(
-      ...sql`SELECT accounts.playername, accounts.passedtest, deltabans_bans.name
-        FROM accounts 
+      sql`SELECT accounts.playername, accounts.passedtest, deltabans_bans.name
+        FROM accounts
         LEFT JOIN deltabans_bans ON deltabans_bans.name = accounts.playername
         WHERE accounts.playername = ${username} AND accounts.passedtest = 1 AND deltabans_bans.name IS NULL
         LIMIT 1;`,
@@ -57,7 +52,11 @@ export default class MythicAuth {
     return !!result.length
   }
 
-  async checkUser(username: string, permission?: string, password?: string): Promise<boolean> {
+  async check(
+    username: string,
+    permission?: string | null,
+    password?: string | null,
+  ): Promise<boolean> {
     if (password === '' || permission === '') return false // Safety check
     if (!permission && !password) return await this.#checkUserExists(username)
     return (

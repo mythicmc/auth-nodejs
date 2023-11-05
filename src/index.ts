@@ -33,7 +33,11 @@ export default class MythicAuth {
     })
   }
 
-  async checkUser(username: string, permission: string, password?: string): Promise<boolean> {
+  async check(
+    username: string,
+    permission: string | null,
+    password?: string | null,
+  ): Promise<boolean> {
     if (password === '') return false // Return false if empty, undefined is a different case
 
     const request = JSON.stringify({ username, password })

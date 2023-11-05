@@ -14,5 +14,5 @@ await client.connect('app.*') // The permission namespace within which you check
 // The service will check if the user has the permission *and* if the password matches the user's.
 // The password is optional, if not passed, only the permission check will be done.
 // The permission is optional only if using the standalone client.
-console.log(await client.checkPerm('username', 'permission', 'password'))
+console.log(await client.check('username', 'permission', 'password'))
 ```
