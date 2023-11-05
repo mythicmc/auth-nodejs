@@ -30,7 +30,7 @@
     "test": "echo FIXME: No tests!",
     "lint": "eslint . && tsc --noEmit",
     "build": "tsc",
-    "prepublishOnly": "yarn build"
+    "prepublish": "yarn build"
   },
   "dependencies": {
     "argon2": "^0.31.2",

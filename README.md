@@ -2,6 +2,14 @@
 
 Node.js client for MythicAuthService. Requires Node.js 18 and newer.
 
+## Installation
+
+```bash
+npm install @mythicmc/auth
+# or
+yarn add @mythicmc/auth
+```
+
 ## Usage
 
 ```js
