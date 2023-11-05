@@ -11,9 +11,9 @@ export default class MythicAuth {
     }
   >()
 
-  constructor(redisUrl: string) {
-    this.#pub = new ioredis.Redis(redisUrl)
-    this.#sub = new ioredis.Redis(redisUrl)
+  constructor(...redisUrl: ConstructorParameters<typeof ioredis.Redis>) {
+    this.#pub = new ioredis.Redis(...redisUrl)
+    this.#sub = new ioredis.Redis(...redisUrl)
   }
 
   async connect(namespace: string, force?: boolean): Promise<void> {
