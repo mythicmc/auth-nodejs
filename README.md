@@ -21,6 +21,12 @@ await client.connect('app.*') // The permission namespace within which you check
 
 // The service will check if the user has the permission *and* if the password matches the user's.
 // The password is optional, if not passed, only the permission check will be done.
-// The permission is optional only if using the standalone client.
+// The permission is optional *only* if using the standalone client.
 console.log(await client.check('username', 'permission', 'password'))
+```
+
+This package also comes with a dummy version of the Redis service, which can be used for testing purposes.
+
+```bash
+npx -- @mythicmc/auth dummy-service # optionally, Redis URL can be passed as arg
 ```

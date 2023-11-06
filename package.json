@@ -29,7 +29,7 @@
   "scripts": {
     "test": "echo FIXME: No tests!",
     "lint": "eslint . && tsc --noEmit",
-    "build": "tsc && node ./scripts/build.js",
+    "build": "tsc",
     "prepublish": "yarn build"
   },
   "dependencies": {
