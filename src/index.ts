@@ -35,7 +35,7 @@ export default class MythicAuth {
 
   async check(
     username: string,
-    permission: string | null,
+    permission: string,
     password?: string | null,
   ): Promise<boolean> {
     if (password === '') return false // Return false if empty, undefined is a different case

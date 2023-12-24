@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import { Redis } from 'ioredis'
 
-const url = process.argv[2] ?? 'redis://localhost:6379'
-if (!process.argv[2]) {
+const arg = process.argv[2] === 'dummy-service' ? process.argv[3] : process.argv[2]
+const url = arg ?? 'redis://localhost:6379'
+if (!arg) {
   console.log('No URL passed as parameter, using default redis://localhost:6379')
 }
 
